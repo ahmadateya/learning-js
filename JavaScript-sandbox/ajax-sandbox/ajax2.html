@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ajax 2 - Locat JSON</title>
+</head>
+<body>
+	<button id="button1">Get User</button>
+	<button id="button2">Get Users</button>
+	<br><br>
+	<h1>User</h1>
+	<div id="user"></div>
+
+	<h1>Users</h1>
+	<div id="users"></div>
+
+
+	<script>
+		// Create event listener
+        document.getElementById('button1').addEventListener('click', loadUser);
+
+		document.getElementById('button2').addEventListener('click', loadUsers);
+
+        function loadUser() {
+        	var xhr = new XMLHttpRequest();
+        	xhr.open('GET', 'user.json', true);
+
+        	xhr.onload = function() {
+                // check for the status of the response
+                if (this.status == 200) {
+                    var user = JSON.parse(this.responseText);
+
+                    document.getElementById('user').innerHTML = `
+                    	<ul>
+                    		<li>ID: ${user.id}</li>
+                    		<li>Name: ${user.name}</li>
+                    		<li>Email: ${user.email}</li>
+                    	</ul>
+                    `;
+
+                } else if (this.status == 404) {
+                    document.getElementById('user').innerHTML = 'Not found';
+                }
+            }
+
+            xhr.onerror = function() {
+                console.log('request error');
+            }
+
+            // sends request
+            xhr.send();
+        }
+
+		// didnt work
+        function loadUsers() {
+        	var xhr = new XMLHttpRequest();
+        	xhr.open('GET', 'users.json', true);
+
+        	xhr.onload = function() {
+                // check for the status of the response
+                if (this.status == 200) {
+                    var users = JSON.parse(this.responseText);
+
+                    var output = '';
+                    for ( var i in users) {
+                    	output = `
+                    	<ul>
+                    		<li>ID: ${users[i].id}</li>
+                    		<li>Name: ${users[i].name}</li>
+                    		<li>Email: ${users[i].email}</li>
+                    	</ul>
+                    	`;
+                    }
+
+                    document.getElementById('users').innerHTML = output;
+
+                } else if (this.status == 404) {
+                    document.getElementById('users').innerHTML = 'Not found';
+                }
+            }
+
+            xhr.onerror = function() {
+                console.log('request error');
+            }
+
+            // sends request
+            xhr.send();
+        }
+	</script>
+</body>
+</html>
